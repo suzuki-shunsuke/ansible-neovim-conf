@@ -1,0 +1,13 @@
+---
+- include: setup.yml
+- hosts: default
+  vars_files:
+  - vars/main.yml
+  roles:
+  - suzuki-shunsuke.ghq-module
+  - role: ansible-neovim-conf
+    neovim_conf_repo: suzuki-shunsuke/neovim.conf
+  - role: ansible-neovim-conf
+    neovim_conf_repo: suzuki-shunsuke/neovim.conf
+    neovim_conf_undodir: "{{ansible_env.HOME}}/.nvim_undo"
+    xdg_config_home: "{{ansible_env.HOME}}/xdg"

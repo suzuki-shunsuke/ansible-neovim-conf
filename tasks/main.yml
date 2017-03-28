@@ -1,0 +1,29 @@
+---
+# tasks file for neovim-conf
+- name: ghq root
+  shell: "{{ghq_executable}} root"
+  register: ghq_root
+  changed_when: false
+- name: mkdir $XDG_CONFIG_HOME
+  file:
+    path: "{{ xdg_config_home }}"
+    state: directory
+- name: Clone neovim config repository
+  ghq:
+    name: "{{neovim_conf_repo}}"
+    executable: "{{ghq_executable}}"
+- name: check $XDG_CONFIG_HOME/nvim
+  stat:
+    path: "{{ xdg_config_home }}/nvim"
+  register: st
+- name: make symbolic link
+  file:
+    src: "{{ghq_root.stdout}}/github.com/{{neovim_conf_repo}}"
+    dest: "{{ xdg_config_home }}/nvim"
+    state: link
+  when: not st.stat.exists
+- name: mkdir undodir
+  file:
+    path: "{{ neovim_conf_undodir }}"
+    state: directory
+  when: neovim_conf_undodir != ""

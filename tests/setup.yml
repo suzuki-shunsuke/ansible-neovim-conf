@@ -1,9 +1,0 @@
----
-- hosts: default
-  vars_files:
-  - vars/main.yml
-  roles:
-  - suzuki-shunsuke.git-ubuntu
-  - suzuki-shunsuke.go-ubuntu
-  - suzuki-shunsuke.go-module
-  - ghq

@@ -1,29 +1,25 @@
----
 # tasks file for neovim-conf
-- name: ghq root
-  shell: "{{ghq_executable}} root"
-  register: ghq_root
-  changed_when: false
 - name: mkdir $XDG_CONFIG_HOME
   file:
-    path: "{{ xdg_config_home }}"
+    path: "{{neovim_conf_xdg_config_home}}"
     state: directory
-- name: Clone neovim config repository
-  ghq:
-    name: "{{neovim_conf_repo}}"
-    executable: "{{ghq_executable}}"
-- name: check $XDG_CONFIG_HOME/nvim
-  stat:
-    path: "{{ xdg_config_home }}/nvim"
-  register: st
+- name: mkdir repo's parent directory
+  file:
+    path: "{{neovim_conf_cloned_dest|dirname}}"
+    state: directory
+- name: Clone the vim config repository
+  git:
+    repo: "{{neovim_conf_repo}}"
+    dest: "{{neovim_conf_cloned_dest}}"
+    version: "{{neovim_conf_version}}"
 - name: make symbolic link
   file:
-    src: "{{ghq_root.stdout}}/github.com/{{neovim_conf_repo}}"
-    dest: "{{ xdg_config_home }}/nvim"
+    src: "{{neovim_conf_cloned_dest}}"
+    dest: "{{neovim_conf_xdg_config_home}}/nvim"
     state: link
-  when: not st.stat.exists
+  when: neovim_conf_cloned_dest != "{}/nvim".format(neovim_conf_xdg_config_home)
 - name: mkdir undodir
   file:
-    path: "{{ neovim_conf_undodir }}"
+    path: "{{neovim_conf_undodir}}"
     state: directory
-  when: neovim_conf_undodir != ""
+  when: neovim_conf_undodir is defined

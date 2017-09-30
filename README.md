@@ -1,16 +1,14 @@
-neovim-conf
-============
+# ansible-neovim-conf
 
 [![Build Status](https://travis-ci.org/suzuki-shunsuke/ansible-neovim-conf.svg?branch=master)](https://travis-ci.org/suzuki-shunsuke/ansible-neovim-conf)
 
-Install your neovim configuration hosted on the GitHub.
+ansible role to install neovim configurations
 
 https://galaxy.ansible.com/suzuki-shunsuke/neovim-conf/
 
-Requirements
-------------
+## Requirements
 
-* [motemen/ghq](https://github.com/motemen/ghq)
+* git
 
 The directory structure of the repository where your vim config is hosted must be in the following manner.
 
@@ -19,32 +17,32 @@ The directory structure of the repository where your vim config is hosted must b
   init.vim
 ```
 
-Role Variables
---------------
+## Role Variables
 
-* neovim_conf_repo: The remote repository where your neovim config is hosted.
-* ghq_executable: The executable path of ghq command. The default is "ghq".
-* xdg_config_home: XDG_CONFIG_HOME. The default is the environment variable XDG_CONFIG_HOME or ~/.config
-* neovim_conf_undodir: neovim undodir. If this variable is set, undodir is created
+name | required | default | description
+--- | --- | --- | ---
+neovim_conf_repo | yes | |
+neovim_conf_cloned_dest | yes | |
+neovim_conf_undodir | no | | neovim's undodir path. If this variable is set, this directory is created
+neovim_conf_xdg_config_home | no | `XDG_CONFIG_HOME` >> `{{ansible_env.HOME}}/.config` | XDG_CONFIG_HOME
+neovim_conf_version | no | HEAD |
 
-Dependencies
-------------
+## Dependencies
 
-* [suzuki-shunsuke.ghq-module](https://galaxy.ansible.com/suzuki-shunsuke/ghq-module/)
+Nothing.
 
-Example Playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: servers
-  vars:
-    ghq_executable: /home/vagrant/.go/bin/ghq
   roles:
-  - role: suzuki-shunsuke.neovim-conf
-    neovim_conf_repo: suzuki-shunsuke/neovim.conf
+    - role: suzuki-shunsuke.neovim-conf
+      neovim_conf_repo: https://github.com/suzuki-shunsuke/neovim.conf
+      neovim_conf_cloned_dest: "{{ansible_env.HOME}}/repos/src/github.com/suzuki-shunsuke/neovim.conf"
+      neovim_conf_undodir: "{{ansible_env.HOME}}/.neovimundo"
+      neovim_conf_version: develop
 ```
 
-License
--------
+## License
 
-MIT
+[MIT](LICENSE)

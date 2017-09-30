@@ -1,4 +1,3 @@
----
 # defaults file for neovim-conf
-xdg_config_home: "{{ ansible_env.get('XDG_CONFIG_HOME', '{}/.config'.format(ansible_env.HOME)) }}"
-neovim_conf_undodir: ""
+neovim_conf_xdg_config_home: "{{ ansible_env.get('XDG_CONFIG_HOME', '{}/.config'.format(ansible_env.HOME)) }}"
+neovim_conf_version: HEAD

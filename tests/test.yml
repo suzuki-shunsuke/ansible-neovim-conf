@@ -1,13 +1,11 @@
----
-- include: setup.yml
 - hosts: default
-  vars_files:
-  - vars/main.yml
+  vars:
+    playbook_nonroot: "{{ (ansible_env.USER is undefined) | ternary(ansible_env.HOME != '/root', ansible_env.USER != 'root') }}"
   roles:
-  - suzuki-shunsuke.ghq-module
-  - role: ansible-neovim-conf
-    neovim_conf_repo: suzuki-shunsuke/neovim.conf
-  - role: ansible-neovim-conf
-    neovim_conf_repo: suzuki-shunsuke/neovim.conf
-    neovim_conf_undodir: "{{ansible_env.HOME}}/.nvim_undo"
-    xdg_config_home: "{{ansible_env.HOME}}/xdg"
+    - role: geerlingguy.git
+      become: "{{playbook_nonroot}}"
+    - role: ansible-neovim-conf
+      neovim_conf_xdg_config_home: "{{ansible_env.HOME}}/xdg"
+      neovim_conf_repo: https://github.com/suzuki-shunsuke/neovim.conf
+      neovim_conf_cloned_dest: "{{ansible_env.HOME}}/repos/src/github.com/suzuki-shunsuke/neovim.conf"
+      neovim_conf_undodir: "{{ansible_env.HOME}}/.neovimundo"

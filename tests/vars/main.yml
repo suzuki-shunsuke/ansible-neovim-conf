@@ -1,3 +1,0 @@
----
-go_path: "{{ansible_env.get('GOPATH', '{}/.go'.format(ansible_env.HOME))}}"
-ghq_executable: "{{go_path}}/bin/ghq"
